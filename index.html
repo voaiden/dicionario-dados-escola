@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dicionário de Dados - E.I. Sonho de Criança  </title>
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-content">
+            <h1><i class="fa-solid fa-school"></i> E.I. Sonho de Criança</h1>
+            <p class="subtitle">Dicionário de Dados Acadêmicos & Governança (DMBOK / COBIT / LGPD)</p>
+        </div>
+        <div class="header-actions">
+            <a href="docs/Especificacao_Requisitos_Regras_Negocio_BD.pdf" class="btn-pdf" target="_blank" download>
+                <i class="fa-solid fa-file-pdf"></i> Baixar Requisitos (PDF)
+            </a>
+            <button id="theme-toggle" class="btn-theme" title="Alternar Tema">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Seção de Metadados e Governança -->
+        <section class="metadata-card">
+            <h2><i class="fa-solid fa-shield-halved"></i> Governança de Dados & Data Literacy</h2>
+            <p>
+                O letramento em dados (<em>Data Literacy</em>) associado à governança garante que toda a comunidade escolar compreenda o ciclo de vida e a criticidade das informações manipuladas. Este portal assegura conformidade estrita com a <strong>LGPD</strong> (proteção de dados PII de alunos e responsáveis) e controle de acesso baseado em papéis (<strong>RBAC</strong>), mantendo a integridade referencial conforme diretrizes do DMBOK.
+            </p>
+            <div class="meta-grid">
+                <div><strong>Data Owner:</strong> Secretaria Acadêmica</div>
+                <div><strong>Data Steward:</strong> Equipe de TI & Governança</div>
+                <div><strong>Padrão de Modelagem:</strong> Relacional (3ª FN)</div>
+                <div><strong>Total de Tabelas:</strong> 4 Entidades</div>
+            </div>
+        </section>
+
+        <!-- Barra de Ações e Busca -->
+        <section class="controls-section">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" placeholder="Pesquisar tabelas, colunas, tipos ou regras de negócio...">
+            </div>
+            <button id="openDerModal" class="btn-der">
+                <i class="fa-solid fa-diagram-project"></i> Visualizar DER (Diagrama)
+            </button>
+        </section>
+
+        <!-- Container das Tabelas do Banco de Dados -->
+        <div id="tables-container" class="tables-grid">
+
+            <!-- Tabela 1: tb_aluno -->
+            <div class="table-card" data-table="tb_aluno aluno aluno_id pii lgpd">
+                <div class="table-header">
+                    <h3><i class="fa-solid fa-table"></i> tb_aluno</h3>
+                    <span class="badge primary">Entidade Principal</span>
+                </div>
+                <p class="table-desc">Armazena os registros cadastrais e dados sensíveis dos estudantes da instituição.</p>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Coluna</th>
+                                <th>Tipo</th>
+                                <th>Chave</th>
+                                <th>Regras / Governança (LGPD / RBAC)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>id_aluno</strong></td>
+                                <td>INT</td>
+                                <td><span class="badge pk">PK</span></td>
+                                <td>Identificador único sequencial do aluno.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>nome_completo</strong></td>
+                                <td>VARCHAR(120)</td>
+                                <td>-</td>
+                                <td>Nome civil completo do estudante. (Acesso: Secretaria/Admin)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>cpf</strong></td>
+                                <td>VARCHAR(14)</td>
+                                <td><span class="badge uk">UK</span></td>
+                                <td><span class="badge lgpd-pii">LGPD: PII Sensível</span> - CPF único. Restrito a Admin.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>data_nascimento</strong></td>
+                                <td>DATE</td>
+                                <td>-</td>
+                                <td>Data de nascimento do aluno para cálculo de idade escolar.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>email_responsavel</strong></td>
+                                <td>VARCHAR(100)</td>
+                                <td>-</td>
+                                <td><span class="badge lgpd-pii">LGPD: Contato PII</span> - E-mail do responsável legal.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>telefone_responsavel</strong></td>
+                                <td>VARCHAR(20)</td>
+                                <td>-</td>
+                                <td>Contato telefônico principal do responsável.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>status_lgpd_consentimento</strong></td>
+                                <td>BOOLEAN</td>
+                                <td>-</td>
+                                <td>Consentimento ativo para tratamento de dados (Padrão: TRUE).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>data_cadastro</strong></td>
+                                <td>TIMESTAMP</td>
+                                <td>-</td>
+                                <td>Data e hora de registro do aluno no sistema.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-footer">
+                    <span><strong>Regras de Negócio:</strong> RN01 (LGPD), RN02 (Unicidade de CPF).</span>
+                </div>
+            </div>
+
+            <!-- Tabela 2: tb_professor -->
+            <div class="table-card" data-table="tb_professor professor docente">
+                <div class="table-header">
+                    <h3><i class="fa-solid fa-table"></i> tb_professor</h3>
+                    <span class="badge primary">Entidade Docente</span>
+                </div>
+                <p class="table-desc">Mantém o cadastro dos professores habilitados a lecionar nas turmas.</p>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Coluna</th>
+                                <th>Tipo</th>
+                                <th>Chave</th>
+                                <th>Regras / Governança (LGPD / RBAC)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>id_professor</strong></td>
+                                <td>INT</td>
+                                <td><span class="badge pk">PK</span></td>
+                                <td>Identificador único do docente.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>nome_professor</strong></td>
+                                <td>VARCHAR(120)</td>
+                                <td>-</td>
+                                <td>Nome completo do professor.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>cpf</strong></td>
+                                <td>VARCHAR(14)</td>
+                                <td><span class="badge uk">UK</span></td>
+                                <td><span class="badge lgpd-pii">LGPD: PII</span> - CPF do professor.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>especialidade</strong></td>
+                                <td>VARCHAR(50)</td>
+                                <td>-</td>
+                                <td>Área de especialização ou disciplina lecionada.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>email</strong></td>
+                                <td>VARCHAR(100)</td>
+                                <td><span class="badge uk">UK</span></td>
+                                <td>E-mail institucional de contato.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>data_admissao</strong></td>
+                                <td>DATE</td>
+                                <td>-</td>
+                                <td>Data de contratação do docente na instituição.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-footer">
+                    <span><strong>Regras de Negócio:</strong> RN03 (Especialidade Ativa), RN04 (RBAC Professor).</span>
+                </div>
+            </div>
+
+            <!-- Tabela 3: tb_turma -->
+            <div class="table-card" data-table="tb_turma turma letivo turno">
+                <div class="table-header">
+                    <h3><i class="fa-solid fa-table"></i> tb_turma</h3>
+                    <span class="badge primary">Entidade Operacional</span>
+                </div>
+                <p class="table-desc">Gerencia as turmas ativas associadas aos anos letivos e professores responsáveis.</p>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Coluna</th>
+                                <th>Tipo</th>
+                                <th>Chave</th>
+                                <th>Regras / Governança (LGPD / RBAC)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>id_turma</strong></td>
+                                <td>INT</td>
+                                <td><span class="badge pk">PK</span></td>
+                                <td>Identificador único da turma.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>nome_turma</strong></td>
+                                <td>VARCHAR(50)</td>
+                                <td>-</td>
+                                <td>Nome ou código descritivo da turma (ex: 5º Ano A).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ano_letivo</strong></td>
+                                <td>INT</td>
+                                <td>-</td>
+                                <td>Ano letivo de vigência no formato YYYY.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>turno</strong></td>
+                                <td>VARCHAR(20)</td>
+                                <td>-</td>
+                                <td>Restrição CHECK: 'MANHÃ', 'TARDE' ou 'NOITE'.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>id_professor</strong></td>
+                                <td>INT</td>
+                                <td><span class="badge fk">FK</span></td>
+                                <td>Referência ao professor responsável (<small>tb_professor.id_professor</small>). ON DELETE RESTRICT.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-footer">
+                    <span><strong>Regras de Negócio:</strong> RN05 (Professor Responsável), RN06 (Ano YYYY).</span>
+                </div>
+            </div>
+
+            <!-- Tabela 4: tb_matricula -->
+            <div class="table-card" data-table="tb_matricula matricula associativa aluno turma">
+                <div class="table-header">
+                    <h3><i class="fa-solid fa-table"></i> tb_matricula</h3>
+                    <span class="badge secondary">Tabela Associativa (N:M)</span>
+                </div>
+                <p class="table-desc">Relaciona os alunos às turmas, controlando o histórico e status de matrícula.</p>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Coluna</th>
+                                <th>Tipo</th>
+                                <th>Chave</th>
+                                <th>Regras / Governança (LGPD / RBAC)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>id_matricula</strong></td>
+                                <td>INT</td>
+                                <td><span class="badge pk">PK</span></td>
+                                <td>Identificador único da matrícula.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>id_aluno</strong></td>
+                                <td>INT</td>
+                                <td><span class="badge fk">FK</span></td>
+                                <td>Referência ao aluno (<small>tb_aluno.id_aluno</small>). ON DELETE CASCADE.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>id_turma</strong></td>
+                                <td>INT</td>
+                                <td><span class="badge fk">FK</span></td>
+                                <td>Referência à turma (<small>tb_turma.id_turma</small>). ON DELETE RESTRICT.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>data_matricula</strong></td>
+                                <td>DATE</td>
+                                <td>-</td>
+                                <td>Data em que a matrícula foi efetivada.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>status_matricula</strong></td>
+                                <td>VARCHAR(20)</td>
+                                <td>-</td>
+                                <td>Status CHECK: 'ATIVA', 'CANCELADA', 'CONCLUÍDA'.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-footer">
+                    <span><strong>Regras de Negócio:</strong> RN07 (Cardinalidade 1 por ano), RN08 (Status permitidos).</span>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modal do DER com Panzoom -->
+    <div id="derModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-diagram-project"></i> Diagrama Entidade-Relacionamento (DER)</h3>
+                <button id="closeModal" class="btn-close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="panzoom-instructions">
+                    <span>Dica: Use o scroll do mouse para dar Zoom e clique/arraste para mover a imagem (Pan).</span>
+                    <div class="zoom-controls">
+                        <button id="zoomIn"><i class="fa-solid fa-plus"></i></button>
+                        <button id="zoomOut"><i class="fa-solid fa-minus"></i></button>
+                        <button id="zoomReset"><i class="fa-solid fa-rotate-right"></i> Reset</button>
+                    </div>
+                </div>
+                <div class="panzoom-container">
+                    <img id="der-image" src="assets/der.png" alt="Diagrama Entidade-Relacionamento da EscolaLuís Henrique Lopes GomesLuís Henrique Lopes GomesLuís Henrique Lopes GomesLuís Henrique Lopes GomesLuís Henrique Lopes GomesLuís Henrique Lopes GomesLuís Henrique Lopes GomesLuís Henrique Lopes GomesLuís Henrique Lopes GomesLuís Henrique Lopes GomesLuís Henrique Lopes GomesLuís Henrique Lopes Gomes">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2026 E.I. Sonho de Criança - Sistema de Governança e Dicionário de Dados. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Inclusão da Biblioteca Panzoom.js via CDN -->
+    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
